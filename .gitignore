@@ -21,4 +21,14 @@ __pycache__/
 Thumbs.db
 *.log
 
-# Add entries appropriate to your chosen language or framework.
+# Fallback Forge generated output (inspect.json, lite/, reports).
+.fallback-forge/
+test-results/
+playwright-report/
+
+# Only pnpm lockfiles belong in this repo.
+package-lock.json
+yarn.lock
+
+examples/event-site/public/img/
+examples/event-site/public/vendor/

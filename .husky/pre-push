@@ -1,0 +1,6 @@
+# Mirrors the fast CI gate locally so failures surface before a push/CI
+# round trip. Use --no-verify only when the hooks themselves are broken.
+pnpm lint
+pnpm format:check
+pnpm test
+git diff --check

@@ -1,0 +1,6 @@
+node_modules/
+dist/
+.fallback-forge/
+pnpm-lock.yaml
+CHANGELOG.md
+AI_USAGE.md

@@ -1,0 +1,54 @@
+{
+  "name": "fallback-forge",
+  "version": "0.1.0",
+  "description": "Generate, switch to, and verify a lightweight companion route for Vite/React websites.",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "fallback-forge": "./dist/bin/cli.js"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/plugin.d.ts",
+      "default": "./dist/plugin.js"
+    },
+    "./config": {
+      "types": "./dist/config.d.ts",
+      "default": "./dist/config.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "keywords": [
+    "vite-plugin",
+    "progressive-enhancement",
+    "offline",
+    "slow-network",
+    "playwright"
+  ],
+  "dependencies": {
+    "@ai-sdk/openai-compatible": "^3.0.71",
+    "ai": "^7.0.143",
+    "jiti": "^2.7.0",
+    "playwright": "^1.64.1",
+    "zod": "^4.6.7"
+  },
+  "peerDependencies": {
+    "vite": ">=5"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "typescript": "^7.0.2",
+    "vite": "^8.3.4",
+    "vitest": "^5.0.5"
+  }
+}

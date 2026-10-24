@@ -1,0 +1,6 @@
+packages:
+  - packages/*
+  - examples/*
+
+# Supply-chain guard: only resolve versions published at least 7 days ago.
+minimumReleaseAge: 10080

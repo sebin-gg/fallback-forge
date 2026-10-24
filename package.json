@@ -1,0 +1,46 @@
+{
+  "name": "fallback-forge-workspace",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Fallback Forge: generate, switch to, and verify a lightweight companion route for Vite/React sites on poor connections.",
+  "type": "module",
+  "packageManager": "pnpm@12.3.4",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "pnpm build:tool && pnpm --filter event-site dev",
+    "build:tool": "pnpm --filter fallback-forge build",
+    "build": "pnpm build:tool && pnpm --filter event-site build",
+    "preview": "pnpm --filter event-site preview",
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "pnpm --filter fallback-forge typecheck",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "pnpm --filter fallback-forge test",
+    "verify": "pnpm lint && pnpm format:check && pnpm typecheck && pnpm test && pnpm build && git diff --check",
+    "demo:inspect": "pnpm build:tool && pnpm --filter event-site ff:inspect",
+    "demo:generate": "pnpm build:tool && pnpm --filter event-site ff:generate",
+    "demo:verify": "pnpm build:tool && pnpm --filter event-site ff:run",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{js,mjs,cjs,jsx,ts}": "eslint --max-warnings 0 --fix",
+    "*": "prettier --write --ignore-unknown"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^21.2.3",
+    "@commitlint/config-conventional": "^21.2.3",
+    "@eslint/js": "^10.0.1",
+    "eslint": "^10.13.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react": "^7.37.5",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "globals": "^17.13.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^17.6.0",
+    "prettier": "^3.9.10",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.71.2"
+  }
+}

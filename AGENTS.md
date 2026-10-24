@@ -1,53 +1,207 @@
-# Agent guide for hackathon projects
+# AGENTS.md — Fallback Forge
 
-## Event requirements
+Working rules for agents and humans in this repository. Read this before
+touching anything. Numbered sections have stable anchors — cite them in
+review ("violates §2.3") instead of pasting prose.
 
-- Read [RULES.md](RULES.md) before working. Build project implementation from scratch at the event; do not import a pre-built project.
-- Libraries, APIs, and public datasets are allowed. Document their sources and use.
-- Use Codex during development and briefly record its actual contribution in [AI_USAGE.md](AI_USAGE.md).
-- Prepare a code repository, short project description, and working demo in [SUBMISSION.md](SUBMISSION.md).
+- **§0 Event requirements** — hackathon rules that override everything else.
+- **§1 Background** — where things are (read-only orientation).
+- **§2 Behaviour** — how to work (contracts, verification, git flow).
+- **§3 Output** — what to emit (commits, docs, reports).
 
-## Use basic coding patterns
+## §0 Event requirements
 
-- Prefer straightforward, idiomatic code: small functions, clear names, simple data structures, and modules with one clear responsibility.
-- Use the project's existing patterns. Add an abstraction only when an actual repeated need makes the code easier to understand.
-- Choose the simplest implementation that meets the current requirement. Avoid unnecessary layers, generic frameworks, premature optimization, and speculative features.
-- Keep dependencies few and purposeful. Reuse appropriate standard libraries and established libraries instead of reimplementing them.
-- Validate inputs, handle errors explicitly, and show useful failure messages. Do not hide failures behind fabricated success or demo data.
-- Keep changes focused. Explain the reason for non-obvious decisions in short comments or project documentation.
+- Read [RULES.md](RULES.md) first. Build the implementation from scratch at
+  the event; do not import a pre-built project. Libraries, APIs, and public
+  datasets are allowed — document their sources in `README.md`.
+- Use Codex (or the agent actually in use) during development and record its
+  real contribution in [AI_USAGE.md](AI_USAGE.md). Brief rows, no transcripts.
+- Keep [SUBMISSION.md](SUBMISSION.md) current: repository, short
+  description, working demo, final commit SHA. Wrap-up is 10:00 AM IST,
+  11 October 2026.
+- **Never invent results.** Test output, deployment success, AI usage, and
+  commit timestamps are recorded only when they actually happened. State
+  verified behaviour; mark everything else as planned or TODO.
 
-## Document every meaningful change
+## §1 Background
 
-- Update [CHANGELOG.md](CHANGELOG.md) in the same commit as each meaningful change. Record the date and time with timezone, what changed, why, the affected files or feature, validation performed, and known limitations.
-- Update [README.md](README.md) whenever setup, commands, environment requirements, project behavior, or demo instructions change.
-- Update [AI_USAGE.md](AI_USAGE.md) whenever Codex makes a meaningful contribution. Record the task, assistance, human review status, checks, and any corrections. Brief summaries are enough; full chat transcripts are unnecessary.
-- Keep claims accurate. Distinguish implemented and verified behavior from planned or incomplete work. Never invent test results, deployment success, AI usage, or commit timestamps.
+- **Project:** a Vite/React developer tool that generates a lightweight
+  companion route, switches visitors to it on poor connectivity, and verifies
+  essential actions with Playwright. Full concept: [README.md](README.md).
+- **Package manager:** `pnpm` only (`pnpm install`, `pnpm run <script>`,
+  `pnpm dlx`). Never commit a `package-lock.json` or `yarn.lock`.
+- **`sfw` wrapper:** IF `sfw` is on PATH, prefix package-manager commands
+  with it (`sfw pnpm install`). ELSE run the bare command. Never install it,
+  never fail when it is absent. Do not wrap `git`, `rtk`, or other utilities.
+- **Runtime:** Node `>=22` (see `engines` in `package.json`). Playwright
+  Chromium is required for `inspect` and `verify`
+  (`pnpm exec playwright install chromium`).
+- **Decisions:** architecture decisions live in `docs/adr/` (one file per
+  decision, linked from `docs/adr/README.md`). This file points at owners; it
+  never duplicates them.
 
-## Make regular, timely commits
+### §1.1 Map
 
-1. Inspect `git status` before editing. Preserve teammates' work and identify files belonging to the current task.
-2. Finish a small, coherent change, run appropriate checks, and update its documentation.
-3. Review the diff and explicitly stage only the files for that change.
-4. **Commit after each completed milestone. While actively building, aim for a commit about every 30 minutes when meaningful changes are ready.** Do not leave the entire night's work for one final commit.
-5. Commit completed work before a handoff, a long break, or the end of a work session. If work is incomplete, document its state and use an honest `wip:` message for a useful checkpoint.
-6. Use short, descriptive messages, such as `feat: add project search`, `fix: handle empty results`, or `docs: explain local demo setup`.
-7. Do not create empty commits to satisfy the clock. Do not backdate commits, squash away the event development record, force-push, or rewrite shared history.
-8. Push committed checkpoints to the team's repository regularly, when network access is available and the team has authorized that remote. Resolve conflicts with care.
+- `packages/fallback-forge/` — the tool (plain ESM, no build step).
+  - `bin/cli.mjs` — `fallback-forge inspect | generate | verify | run`.
+  - `src/config.mjs` — loads and validates `fallback-forge.config.mjs`.
+  - `src/inspect/` — source scan (routes, fetch endpoints) + rendered-DOM
+    extraction via Playwright → `.fallback-forge/inspect.json`.
+  - `src/generate/` — deterministic HTML renderer for the companion route,
+    optional AI outline step (OpenAI-compatible API) → `.fallback-forge/lite/`.
+  - `src/plugin.mjs` — Vite plugin: injects the detection script, serves
+    `/lite/*` in dev, copies it into `dist/` on build.
+  - `src/detect/` — the inline client script (network signals, manual mode).
+  - `src/verify/` — Playwright runner: throttled visits, bytes, load time,
+    console errors, link checks, essential-action checks.
+  - `src/report/` — JSON + Markdown report writers.
+  - `test/` — `node:test` specs for pure modules.
+- `examples/event-site/` — sample Vite/React event website (deliberately
+  heavy) with a mock `/api/register` endpoint; the demo target.
+- `docs/adr/` — architecture decision records.
+- `.github/workflows/ci.yml` — lint, format, unit tests, build, e2e verify.
 
-The 30-minute target is this repository's working convention. It does not replace event rules or organizer instructions.
+Behaviour lives in pure, tested modules; the CLI and plugin are wiring. New
+logic lands as a module with its spec in the same change.
 
-## Check work and protect credentials
+## §2 Behaviour
 
-- Use the project's actual install, run, lint, test, and build commands. Add them to the README as soon as they exist; this template does not prescribe a stack.
-- Run checks appropriate to the change. For a documentation-only change, check links and consistency. For code changes, verify the changed behavior and any relevant existing tests.
-- Report what ran and what passed, failed, or could not be checked. If a command fails, investigate or document the limitation before handoff.
-- Keep credentials, API keys, approved QR codes, and private participant data out of commits and logs. Use environment variables and sanitized examples; never put live keys in `.env.example`.
+### §2.1 Architecture contract (non-negotiable)
 
-## Before submission
+- **Functionality over appearance.** The companion route is semantic HTML,
+  minimal CSS, little or no JavaScript. Never add a framework, bundle, or
+  web font to it.
+- **Never silently drop an essential action.** If `generate` cannot preserve
+  a declared action (unresolvable endpoint, client-only logic), it must flag
+  it in the report. Removing it quietly is a bug.
+- **Deterministic core, optional AI.** Every step must work with no API key.
+  AI only proposes an outline (JSON); the HTML is always rendered by our own
+  code. Never let a model emit raw HTML into the output.
+- **Detection is best-effort.** Network signals vary by browser. The
+  detection script must never break the full app when signals are missing
+  and must always expose a manual switch both ways.
+- **Reuse, don't fork.** The companion reuses the project's existing routes
+  and API endpoints. No parallel backend.
+- **Simple code.** Small functions, clear names, one responsibility per
+  module, no speculative abstractions. Agents: cyclomatic complexity ≤ 8 per
+  function, ideal ≤ 5.
+- **Security.** Never commit `.env`, API keys, tokens, approved QR codes, or
+  participant data. AI credentials come only from environment variables
+  (`OPENAI_API_KEY`, `OPENAI_BASE_URL`, `FALLBACK_FORGE_MODEL`). `.env.example`
+  holds names, never values. Gitleaks runs as a pre-commit hook.
 
-- Complete [SUBMISSION.md](SUBMISSION.md), replacing all participant placeholders.
-- Confirm the README gives reproducible setup and demo steps.
-- Check that the working demo matches the submitted code and that known limitations are disclosed.
-- Update the changelog and AI usage record, commit the final coherent change, and push it.
-- Record the final submitted commit SHA in the submission details. Documentation may record that SHA in a subsequent commit; do not claim later implementation changes belong to the earlier demo.
-- Follow the organizers' actual submission method and timing. The event wraps up by 10:00 AM IST on 11 October 2026.
+### §2.2 Verify (run before you commit)
+
+`pnpm verify` runs the deterministic gate in one command: lint + format
+check + unit tests + build + `git diff --check`. Individual steps:
+
+```powershell
+pnpm lint            # ESLint flat config, zero warnings
+pnpm format:check    # Prettier (fix with pnpm format)
+pnpm test            # node:test unit specs
+pnpm build           # builds examples/event-site with the plugin
+git diff --check     # no whitespace errors
+pnpm demo:verify     # Playwright comparison run (slow; needs Chromium)
+```
+
+Scoping rubric: IF the change is ≤3 files in one module THEN run its spec
+(`node --test packages/fallback-forge/test/<name>.test.mjs`) and lint, ELSE
+run `pnpm verify`. Run `pnpm demo:verify` whenever `inspect/`, `generate/`,
+`detect/`, `verify/`, or the sample site change — it is the product.
+
+If you touched `.github/workflows/`, run `actionlint` locally (it is on
+PATH on the maintainer's machine). Never claim a check passed when it did
+not; report what ran and what failed.
+
+### §2.3 Git flow
+
+- **During the event, `main` is the working branch.** Solo participant,
+  time-boxed: commit directly to `main` in small, coherent, green commits.
+  CI runs on every push. Feature branches and PRs are optional, used for
+  risky experiments or post-event work.
+- **Commit cadence:** after each completed milestone, about every 30
+  minutes while actively building, and before any handoff or break.
+  Incomplete work gets an honest `wip:` commit with its state documented.
+  No empty commits, no backdating, no squashing away the event record, no
+  force-push, no history rewrites.
+- **Before pushing:** `git fetch origin` and rebase onto the latest `main`
+  if it moved. If a push is rejected, fetch + rebase + push again.
+- **Push regularly** when network access is available.
+
+### §2.4 Branch hygiene (when branches are used)
+
+- Before creating a branch or PR, sweep stale ones:
+  `git fetch --all --prune`;
+  `gh pr list --state all --head <branch> --json number,state`;
+  `git ls-remote --heads origin <branch> | wc -l`.
+- After a PR merges, delete both halves at once: `gh pr merge
+--delete-branch`, or `git push origin --delete <branch>` + `git branch -d`.
+- **Squash merges make ancestry checks lie.** `git merge-base --is-ancestor`
+  returns false and `git cherry` is unreliable after a squash. Verify by
+  content: `git diff origin/main <branch> -- <files-the-branch-authored>`
+  (empty = landed).
+- Never delete `main`, a branch with an OPEN PR, or a branch whose content
+  genuinely differs from `main`. Ask when unsure.
+
+### §2.5 Context discipline (agents)
+
+Main-context budget is the scarcest resource in a long session.
+
+- **Search, don't read.** Locate with `rg`/glob; read only the window you
+  need. Never `cat` whole logs or build output.
+- **Never dump long tool output.** Quote the shortest decisive line (the
+  error, the failing assertion) and move on.
+- **Write findings to disk.** Conclusions go in code comments, ADRs, or the
+  changelog; cite `path:line` later instead of carrying the payload.
+- **Trim the plan, not the code.** Short progress notes; no restating file
+  contents to the user.
+
+### §2.6 Tooling notes
+
+- Prefer `rg`, `fd`, `bat`, `eza` over `grep`, `find`, `cat`, `ls` where
+  available. Container engine is `podman`.
+- Git Bash mangles a lone `/` CLI argument into a Windows path. Run slash-
+  leading args with `MSYS_NO_PATHCONV=1`.
+- Stale preview servers lie. If verify results look wrong, kill the port the
+  preview uses and re-run.
+
+## §3 Output
+
+### §3.1 Commits
+
+Conventional Commits only:
+`feat|fix|perf|a11y|chore|docs|test|refactor|ci|build|style|revert|wip(scope):`
+(see `commitlint.config.cjs`). Husky enforces it locally; CI re-checks on
+PRs. Bypass with `--no-verify` only when hooks are genuinely broken, and say
+so in the commit body. Short, descriptive subject; the "why" in the body
+when it is not obvious.
+
+### §3.2 Documentation — same commit as the change
+
+- **`CHANGELOG.md`** for every meaningful change: real timestamp with
+  timezone, what changed, why, affected files or feature, validation
+  performed, known limitations. Newest first.
+- **`README.md`** whenever setup, commands, environment requirements,
+  behaviour, or demo instructions change.
+- **`AI_USAGE.md`** whenever an agent makes a meaningful contribution: task,
+  assistance, human review status, checks, corrections.
+- **`docs/adr/`** IF the change alters a contract in §2.1, adds or removes a
+  check, or overrules a prior decision — ELSE skip.
+- **Drop overclaims.** No "zero-config", "works everywhere", "fully tested"
+  unless verified. Known limitations go in the README and SUBMISSION.
+- Never commit generated artifacts: `dist/`, `node_modules/`,
+  `.fallback-forge/`, `test-results/`, `playwright-report/`, `.env`, logs,
+  scratch files.
+
+### §3.3 Pull requests (when used)
+
+Open against `main` with `.github/pull_request_template.md` filled in. Tick
+only what was actually run. Title follows Conventional Commits.
+
+### §3.4 Before submission
+
+- Complete [SUBMISSION.md](SUBMISSION.md); replace every placeholder.
+- README gives reproducible setup and demo steps that match the code.
+- Known limitations are disclosed. Changelog and AI usage are current.
+- Commit, push, and record the final submitted SHA. Documentation may record
+  the SHA in a later commit; never claim later changes belong to the demo.

@@ -1,0 +1,31 @@
+{
+  "name": "event-site",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Sample heavy Vite/React event website used to demonstrate Fallback Forge.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "ff:inspect": "fallback-forge inspect",
+    "ff:generate": "fallback-forge generate",
+    "ff:verify": "fallback-forge verify",
+    "ff:run": "fallback-forge run",
+    "predev": "node scripts/make-assets.mjs",
+    "prebuild": "node scripts/make-assets.mjs"
+  },
+  "dependencies": {
+    "dayjs": "^1.11.23",
+    "framer-motion": "^14.3.0",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "react-router": "^8.4.0",
+    "recharts": "^3.10.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^6.1.2",
+    "fallback-forge": "workspace:*",
+    "vite": "^8.3.4"
+  }
+}

@@ -1,0 +1,46 @@
+# Dependabot — opens PRs for outdated dependencies.
+# Docs: https://docs.github.com/code-security/dependabot
+version: 2
+updates:
+  # The "npm" ecosystem covers pnpm lockfiles too.
+  - package-ecosystem: 'npm'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+      day: 'monday'
+      time: '06:00'
+      timezone: 'Asia/Kolkata'
+    versioning-strategy: 'auto'
+    open-pull-requests-limit: 10
+    labels:
+      - 'dependencies'
+      - 'bot'
+    groups:
+      react-ecosystem:
+        patterns:
+          - 'react'
+          - 'react-dom'
+          - 'react-router-dom'
+      dev-tooling:
+        patterns:
+          - 'vite'
+          - '@vitejs/*'
+          - 'eslint*'
+          - '@eslint/*'
+          - 'prettier'
+          - 'husky'
+          - 'lint-staged'
+          - '@commitlint/*'
+      playwright:
+        patterns:
+          - 'playwright'
+          - '@playwright/*'
+
+  # Keep GitHub Actions themselves updated.
+  - package-ecosystem: 'github-actions'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+    labels:
+      - 'dependencies'
+      - 'ci'
