@@ -54,7 +54,7 @@ Participate solo or in a team of up to 4. Remove unused rows.
 
 - [x] The project implementation started from scratch at the event.
 - [x] I participated solo or with no more than 4 team members in total.
-- [x] Codex was used during development and its usage is documented.
+- [x] Devin was used during development and its usage is documented.
 - [x] The code repository URL, short description, and working demo are provided.
 - [x] README setup and demo instructions match the submitted code.
 - [x] Actual checks and known limitations are documented.

@@ -14,7 +14,7 @@ review ("violates §2.3") instead of pasting prose.
 - Read [RULES.md](RULES.md) first. Build the implementation from scratch at
   the event; do not import a pre-built project. Libraries, APIs, and public
   datasets are allowed — document their sources in `README.md`.
-- Use Codex (or the agent actually in use) during development and record its
+- Use Devin (or the agent actually in use) during development and record its
   real contribution in [AI_USAGE.md](AI_USAGE.md). Brief rows, no transcripts.
 - Keep [SUBMISSION.md](SUBMISSION.md) current: repository, short
   description, working demo, final commit SHA. Wrap-up is 10:00 AM IST,
