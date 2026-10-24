@@ -4,16 +4,12 @@ Record each meaningful project change during the event, newest first. Update thi
 
 ## Event build log
 
-No project implementation has been recorded yet. Replace this sentence with entries as you build:
+## 2026-10-25T00:38:00+05:30 — Initialize project metadata and participant details
 
-```text
-## <actual timestamp> — <short change title>
-
-- Changed: <feature or files changed>
-- Why: <reason for the change>
-- Validation: <commands or manual checks actually run, with results>
-- Limitations: <known issues or "None identified in these checks">
-```
+- Changed: Updated `SUBMISSION.md`, `README.md`, `AI_USAGE.md`, and `CHANGELOG.md` with project name (`fallback-forge`), repository URL (`https://github.com/sebin-gg/fallback-forge`), and participant details (`Sebin Mathew`, `@sebin-gg`).
+- Why: Configure repository template with participant and project identifiers.
+- Validation: Verified markdown link validity and consistency.
+- Limitations: Application implementation and demo details remain TODO.
 
 ## Template setup — 10 October 2026
 

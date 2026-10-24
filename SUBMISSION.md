@@ -4,9 +4,9 @@ Complete this file during the hackathon and use it to prepare your submission th
 
 ## Project
 
-- **Project name:** TODO
+- **Project name:** fallback-forge
 - **Short description:** TODO — describe the problem, what you built, and who benefits.
-- **Code repository URL:** TODO
+- **Code repository URL:** https://github.com/sebin-gg/fallback-forge
 - **Final submitted implementation commit SHA:** TODO
 - **Working demo URL or local demo steps:** TODO
 - **Demo access requirements:** TODO — explain any prerequisites without including private credentials.
@@ -17,7 +17,7 @@ Participate solo or in a team of up to 4. Remove unused rows.
 
 | Participant name | GitHub handle | Contribution |
 | --- | --- | --- |
-| TODO | TODO | TODO |
+| Sebin Mathew | @sebin-gg | Project architecture, implementation, and documentation |
 
 ## Run and demonstrate
 

@@ -4,11 +4,11 @@ Use Codex during the hackathon and briefly document its actual contribution here
 
 ## Event build log
 
-No participant AI usage has been recorded yet. Replace the placeholder row as you build. Mark human review as pending until someone has reviewed the contribution.
+Initial participant and repository setup recorded below. Mark human review as pending until someone has reviewed the contribution.
 
 | Date and time with timezone | Tool / model, if known | Task | Assistance and affected files | Human review / corrections | Validation and result |
 | --- | --- | --- | --- | --- | --- |
-| TODO | Codex | TODO | TODO | Pending | TODO |
+| 2026-10-25T00:38:00+05:30 | Antigravity (Gemini 3.8 Flash) | Repository metadata and participant setup | Populated participant details, repository URLs, and project identifiers across `SUBMISSION.md`, `README.md`, `AI_USAGE.md`, and `CHANGELOG.md` | Pending | Verified markdown links and document consistency |
 
 ## Template preparation
 

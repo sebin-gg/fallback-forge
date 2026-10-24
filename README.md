@@ -31,9 +31,9 @@ This template has no application code or required technology stack. The document
 
 ## Project overview — complete during the event
 
-- **Project name:** TODO
+- **Project name:** fallback-forge
 - **Short description:** TODO — what it does, who it helps, and why it matters.
-- **Team:** TODO — participant names and GitHub handles; maximum 4 members.
+- **Team:** Sebin Mathew (@sebin-gg)
 - **Working demo:** TODO — link or local demo instructions.
 - **Technology stack:** TODO
 
