@@ -4,8 +4,9 @@ Complete this file during the hackathon and use it to prepare your submission th
 
 ## Project
 
-- **Project name:** fallback-forge
-- **Short description:** TODO — describe the problem, what you built, and who benefits.
+- **Project name:** Fallback Forge (`fallback-forge`)
+- **Track:** BLW — Works Anyway
+- **Short description:** Websites that depend on heavy JavaScript bundles, images and third-party scripts become unusable on weak or unstable connections. Fallback Forge is a developer tool for Vite/React projects that generates a lightweight companion version of a website (semantic HTML, minimal CSS, little or no JavaScript), switches visitors to it when configured network conditions indicate poor connectivity, and uses Playwright to verify that declared essential actions still work in both versions under the same throttled conditions. It helps developers keep critical user journeys — such as finding an event deadline or submitting a registration form — usable when the network fails, and it reports clearly where functionality cannot be preserved.
 - **Code repository URL:** https://github.com/sebin-gg/fallback-forge
 - **Final submitted implementation commit SHA:** TODO
 - **Working demo URL or local demo steps:** TODO
@@ -27,7 +28,7 @@ Participate solo or in a team of up to 4. Remove unused rows.
 - **Start command:** TODO
 - **Demo walkthrough:** TODO — brief steps showing the implemented features.
 - **Checks performed and results:** TODO
-- **Known limitations or incomplete features:** TODO
+- **Known limitations or incomplete features:** The first version targets developer-owned Vite/React projects, not arbitrary third-party websites. Automatic network detection is best-effort because browser support for network signals varies. TODO — update with actual implementation status.
 - **Libraries, APIs, and public datasets used:** TODO — link sources and record attribution where required.
 - **AI usage record:** [AI_USAGE.md](AI_USAGE.md)
 - **Development change log:** [CHANGELOG.md](CHANGELOG.md)
