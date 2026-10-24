@@ -8,7 +8,7 @@ Complete this file during the hackathon and use it to prepare your submission th
 - **Track:** BLW — Works Anyway
 - **Short description:** Websites that depend on heavy JavaScript bundles, images and third-party scripts become unusable on weak or unstable connections. Fallback Forge is a developer tool for Vite/React projects that generates a lightweight companion version of a website (semantic HTML, minimal CSS, little or no JavaScript), switches visitors to it when configured network conditions indicate poor connectivity, and uses Playwright to verify that declared essential actions still work in both versions under the same throttled conditions. It helps developers keep critical user journeys — such as finding an event deadline or submitting a registration form — usable when the network fails, and it reports clearly where functionality cannot be preserved.
 - **Code repository URL:** https://github.com/sebin-gg/fallback-forge
-- **Final submitted implementation commit SHA:** TODO
+- **Final submitted implementation commit SHA:** c0be9c369479ab1d6c9bb48e48f0d033a77c5c2f
 - **Working demo URL or local demo steps:** Local demo via `pnpm dev` (interactive app with `/lite/*` companion route) and automated comparison verify run via `pnpm demo:verify`.
 - **Demo access requirements:** Node.js >= 22 and pnpm >= 9. No external accounts or API keys required; core generation and verification run fully offline.
 
@@ -59,7 +59,7 @@ Participate solo or in a team of up to 4. Remove unused rows.
 - [x] README setup and demo instructions match the submitted code.
 - [x] Actual checks and known limitations are documented.
 - [x] Meaningful changes are documented and committed throughout development.
-- [ ] The final implementation is committed and pushed, and its SHA is recorded above.
+- [x] The final implementation is committed and pushed, and its SHA is recorded above.
 - [x] No credentials or private data are included in the repository or demo instructions.
 - [x] The organizers' announced submission method and timing have been followed.
 
