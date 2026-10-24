@@ -4,6 +4,16 @@ Record each meaningful project change during the event, newest first. Update thi
 
 ## Event build log
 
+## 2026-10-25T04:10:00+05:30 — Configure CI workflows, SonarCloud integration, and repository secrets
+
+- Changed:
+  - Ported and configured GitHub Actions workflows: CodeRabbit assertive review configuration (`.github/coderabbit.yaml`), SonarCloud analysis (`.github/workflows/sonarcloud.yml`), CodeQL security scanning (`.github/workflows/codeql.yml`), repository hygiene (`.github/workflows/hygiene.yml` with cspell, lychee dead-link check, zizmor action security), Dependabot auto-merge (`.github/workflows/dependabot-automerge.yml`), and stale review clearing (`.github/workflows/clear-stale-reviews.yml`).
+  - Added CODEOWNERS, cspell dictionary configuration (`cspell.json`), and SonarCloud configuration (`sonar-project.properties`) with test inclusions updated to include TypeScript test files.
+  - Configured repository secret `SONAR_TOKEN` via GitHub CLI and synchronized the SonarCloud project key to `sebin-gg_fallback-forge`.
+- Why: Establish comprehensive continuous integration, automated code review, static analysis quality gates, and automated dependency maintenance for the project.
+- Validation: Verified SonarCloud project key mapping via API, confirmed secret presence via `gh secret list`, and ran `pnpm verify` cleanly.
+- Limitations: SonarCloud quality gate requires initial GitHub Actions execution upon push to main.
+
 ## 2026-10-25T02:40:00+05:30 — Implement Fallback Forge tool, sample event site, and verify pipeline
 
 - Changed:
