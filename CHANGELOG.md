@@ -4,6 +4,17 @@ Record each meaningful project change during the event, newest first. Update thi
 
 ## Event build log
 
+## 2026-10-25T05:10:00+05:30 — Polish event-site demo visuals and finalize submission metadata
+
+- Changed:
+  - Reworked `examples/event-site/src/App.jsx`, `Home.jsx`, `Schedule.jsx`, and `Register.jsx` with branded header, hero, stats strip, prize grid, event-details card, countdown banner, room badges, and form layout classes.
+  - Rewrote `examples/event-site/src/styles.css` with the visual system (hero, stats, cards, prize grid, schedule table, countdown banner, responsive breakpoints).
+  - Updated `SUBMISSION.md` final commit SHA to `b41a2e4a38c63ced32be7cf9756ddc147e985385`.
+  - Added `docs/demo-script.md` with live demo script and pitch talking points.
+- Why: Maximize demo wow factor ahead of judging while keeping fallback-forge core and CI green.
+- Validation: `pnpm lint`, `pnpm format:check`, `pnpm typecheck`, `pnpm test` (29/29), `pnpm build`, and `pnpm demo:verify` (14/14 essential actions, detection switched to lite) all passed.
+- Limitations: Bundle chunk warning (~758 kB) remains; portal submission step requires organizer access.
+
 ## 2026-10-25T04:18:00+05:30 — Fix CI Playwright resolution, cspell dictionary, and SonarCloud automatic analysis conflict
 
 - Changed:

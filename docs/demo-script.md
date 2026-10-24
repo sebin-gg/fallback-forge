@@ -1,0 +1,24 @@
+# Live demo script and pitch talking points
+
+## 90-second demo flow
+
+1. Open `pnpm dev` → `http://localhost:5173/`. Show branded header, hero, stats strip, prize grid, countdown banner.
+2. Scroll Home: event-details card, schedule preview, recharts restyle. Point out ~4.5 MB full bundle.
+3. Open `/register`: fill form, submit → success status. Show `/schedule` room badges + highlight row.
+4. Run `pnpm demo:verify` (or show report): slow-3g full `/` takes ~91s / 4.5 MB; lite `/` 1.0s / 3 KB.
+5. Show detection: under slow-3g the app switches to `/lite/` automatically (~1s). Manual switch both ways always available.
+6. Show report.md: 14/14 essential actions pass on both versions; zero console errors; zero broken links; 99-100% byte reduction.
+
+## Pitch talking points
+
+- Problem: heavy JS bundles, images, third-party scripts make sites unusable on weak networks.
+- Solution: generate a semantic-HTML companion route, switch visitors on poor connectivity, verify essential actions with Playwright.
+- Differentiator: deterministic core + optional AI outline (never raw HTML); reuses existing routes/APIs; never silently drops an action.
+- Metrics: `/` 4.5 MB → 3 KB (100%), 91s → 1.0s on slow-3g; `/register` 343 KB → 3.4 KB; `/schedule` 343 KB → 2.5 KB.
+- Detection is best-effort: NetworkInformation + Save-Data + slow-load timer; manual switch always works.
+- Limitations disclosed: Vite/React projects only; browser API variance; AI optional.
+
+## Fallback if demo fails
+
+- Show pre-generated `.fallback-forge/report.md` and `inspect.json`.
+- Open `.fallback-forge/lite/index.html` directly to prove the companion route works offline.
