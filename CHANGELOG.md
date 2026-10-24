@@ -4,6 +4,16 @@ Record each meaningful project change during the event, newest first. Update thi
 
 ## Event build log
 
+## 2026-10-25T04:18:00+05:30 — Fix CI Playwright resolution, cspell dictionary, and SonarCloud automatic analysis conflict
+
+- Changed:
+  - Updated `.github/workflows/ci.yml` Playwright installation steps to invoke Playwright scoped to `packages/fallback-forge`.
+  - Expanded `cspell.json` with project-specific terms and ignored build distribution directories (`**/dist/**`).
+  - Disabled SonarCloud conflicting Automatic Analysis via API to allow CI GitHub Actions scanner execution.
+- Why: Ensure continuous integration workflows and hygiene checks pass cleanly in GitHub Actions.
+- Validation: Ran `actionlint` with zero errors, verified cspell with 0 issues across 61 files, and verified `pnpm verify` passes.
+- Limitations: None.
+
 ## 2026-10-25T04:10:00+05:30 — Configure CI workflows, SonarCloud integration, and repository secrets
 
 - Changed:
