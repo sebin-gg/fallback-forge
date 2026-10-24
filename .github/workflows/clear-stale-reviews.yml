@@ -1,0 +1,119 @@
+name: Clear stale reviews
+
+# Dismisses stale CodeRabbit CHANGES_REQUESTED reviews ONLY when:
+#   1. the review targets a commit behind HEAD (stale),
+#   2. every review thread by that bot is resolved,
+#   3. every required check is green on the current head SHA,
+#   4. the review is not the most recent push.
+
+# zizmor: ignore[dangerous-triggers] -- only reads PR number; never checks out PR code.
+on:
+  # zizmor: ignore[dangerous-triggers]
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review]
+  workflow_dispatch:
+    inputs:
+      pr:
+        description: 'PR number to re-evaluate'
+        required: true
+
+permissions:
+  checks: read
+
+concurrency:
+  group: clear-stale-reviews-${{ github.event.pull_request.number || inputs.pr }}
+  cancel-in-progress: true
+
+jobs:
+  clear:
+    name: Clear stale bot reviews
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      checks: read
+    steps:
+      - name: Evaluate and dismiss stale reviews
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number || inputs.pr }}
+          ACTOR: ${{ github.actor }}
+          REVIEWER: coderabbitai[bot]
+        run: |
+          set -euo pipefail
+
+          if [ "$ACTOR" = "dependabot[bot]" ]; then
+            echo "::notice::Dependabot PR — leaving reviews untouched."
+            exit 0
+          fi
+
+          head_sha=$(gh pr view "$PR" --repo "$REPO" --json headRefOid --jq .headRefOid)
+          echo "PR #$PR head: $head_sha"
+
+          # --- Gate 3: every required check must be green ---
+          gh api "repos/$REPO/commits/$head_sha/check-runs?per_page=100" \
+            --paginate --jq '.check_runs[] | "\(.name)\t\(.status)\t\(.conclusion)"' \
+            > /tmp/checks.tsv || true
+          pending=$(awk -F'\t' '$2 != "completed"' /tmp/checks.tsv | wc -l | tr -d ' ')
+          failing=$(awk -F'\t' '$2 == "completed" && $3 != "success" && $3 != "skipped" && $3 != "neutral"' /tmp/checks.tsv | wc -l | tr -d ' ')
+          if [ "$pending" -ne 0 ]; then
+            echo "::notice::$pending check(s) still running — not touching reviews."
+            exit 0
+          fi
+          if [ "$failing" -ne 0 ]; then
+            echo "::notice::$failing check(s) not green — not touching reviews."
+            awk -F'\t' '$2 == "completed" && $3 != "success" && $3 != "skipped" && $3 != "neutral"' /tmp/checks.tsv
+            exit 0
+          fi
+
+          # --- Gate 2: no unresolved threads from this reviewer ---
+          unresolved=$(gh api graphql -f query='
+            query($owner:String!, $repo:String!, $pr:Int!) {
+              repository(owner:$owner, name:$repo) {
+                pullRequest(number:$pr) {
+                  reviewThreads(first:100) {
+                    nodes {
+                      isResolved
+                      comments(last:1) { nodes { author { login } } }
+                    }
+                  }
+                }
+              }
+            }' \
+            -F owner="${REPO%%/*}" -F repo="${REPO##*/}" -F pr="$PR" \
+            --jq "[.data.repository.pullRequest.reviewThreads.nodes[]
+                   | select(.comments.nodes[0].author.login == \"$REVIEWER\")
+                   | select(.isResolved == false)] | length")
+          if [ "${unresolved:-0}" -ne 0 ]; then
+            echo "::notice::$unresolved unresolved $REVIEWER thread(s) — not touching reviews."
+            exit 0
+          fi
+
+          # --- Gates 1 and 4: dismiss only stale CHANGES_REQUESTED ---
+          reviews=$(gh api "repos/$REPO/pulls/$PR/reviews?per_page=100" --paginate \
+            --jq "[.[] | select(.user.login == \"$REVIEWER\")
+                   | select(.state == \"CHANGES_REQUESTED\")
+                   | {id: .id, commit_id: .commit_id}]")
+          count=$(echo "$reviews" | jq 'length')
+          if [ "$count" -eq 0 ]; then
+            echo "No stale $REVIEWER CHANGES_REQUESTED reviews to clear."
+            exit 0
+          fi
+
+          echo "$reviews" | jq -r '.[] | "  \(.id)  \(.commit_id)"'
+          echo "$reviews" | jq -r '.[].id' | while read -r id; do
+            commit=$(echo "$reviews" | jq -r --argjson i "$id" '.[] | select(.id == $i) | .commit_id')
+            if [ "$commit" = "$head_sha" ]; then
+              echo "::notice::Review $id targets the current head — it is live, leaving it."
+              continue
+            fi
+            if ! git merge-base --is-ancestor "$commit" "$head_sha" 2>/dev/null; then
+              echo "Review $id commit $commit is not an ancestor of HEAD; dismissing as stale."
+            fi
+            gh api -X PUT "repos/$REPO/pulls/$PR/reviews/$id/dismissals" \
+              -f event=DISMISS \
+              -f message="Stale: raised against $commit, which is behind PR #$PR head $head_sha. All $REVIEWER threads are resolved and every required check is green on the current head." \
+              --jq '"dismissed \(.id) -> \(.state)"'
+          done
+
+          echo "Final reviewDecision: $(gh pr view "$PR" --repo "$REPO" --json reviewDecision --jq .reviewDecision)"
