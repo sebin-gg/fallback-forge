@@ -51,6 +51,7 @@ jobs:
           args: >-
             --no-progress --verbose --max-retries 2
             --exclude 'linkedin.com' --exclude 'x.com'
+            --exclude 'localhost' --exclude 'maps.app.goo.gl'
             '**/*.md'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

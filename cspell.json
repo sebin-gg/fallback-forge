@@ -16,6 +16,7 @@
   "files": ["**/*.{md,mjs,cjs,js,jsx,ts,tsx,json,yml,yaml,sh,css,html}"],
   "words": [
     "automerge",
+    "autoscan",
     "Behaviour",
     "behaviour",
     "coderabbit",
@@ -49,6 +50,7 @@
     "Ollama",
     "Organised",
     "overclaims",
+    "pathing",
     "PATHCONV",
     "Playwright",
     "pnpm",
