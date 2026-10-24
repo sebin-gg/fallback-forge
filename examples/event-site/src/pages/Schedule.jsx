@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import { motion } from 'framer-motion';
+import { Link } from 'react-router';
 
 const schedule = [
   { time: '18:00', session: 'Check-in', room: 'Lobby' },
@@ -22,35 +23,51 @@ export default function Schedule() {
 
   return (
     <div>
+      <p className="section-eyebrow">Schedule</p>
       <h1>Schedule</h1>
-      <p>All times IST.</p>
-      <p>
-        Starts in {startsInText} (Kick-off at {kickOffTime.format('18:30, 10 October 2026')}).
-      </p>
+      <p className="text-muted">All times IST. Kick-off at 18:30 on 10 October 2026.</p>
 
-      <table>
-        <thead>
-          <tr>
-            <th>Time</th>
-            <th>Session</th>
-            <th>Room</th>
-          </tr>
-        </thead>
-        <tbody>
-          {schedule.map((item, index) => (
-            <motion.tr
-              key={item.time + item.session}
-              initial={{ opacity: 0, x: -10 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: index * 0.05, duration: 0.3 }}
-            >
-              <td>{item.time}</td>
-              <td>{item.session}</td>
-              <td>{item.room}</td>
-            </motion.tr>
-          ))}
-        </tbody>
-      </table>
+      <div className="countdown-banner">
+        <div className="countdown-text">
+          Starts in <strong>{startsInText}</strong> (Kick-off at 18:30, 10 October 2026).
+        </div>
+        <Link to="/register" className="cta">
+          Register now
+        </Link>
+      </div>
+
+      <div className="schedule-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Session</th>
+              <th>Room</th>
+            </tr>
+          </thead>
+          <tbody>
+            {schedule.map((item, index) => {
+              const isLobby = item.room === 'Lobby';
+              const isKickoff = item.session === 'Kick-off';
+              return (
+                <motion.tr
+                  key={item.time + item.session}
+                  className={isKickoff ? 'session-highlight' : ''}
+                  initial={{ opacity: 0, x: -10 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.05, duration: 0.3 }}
+                >
+                  <td className="schedule-time">{item.time}</td>
+                  <td>{item.session}</td>
+                  <td>
+                    <span className={`room-badge${isLobby ? ' lobby' : ''}`}>{item.room}</span>
+                  </td>
+                </motion.tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
