@@ -11,6 +11,20 @@
 
 ## DevTools (F12) demo — the one that lands
 
+**Reset before you start.** A remembered manual choice wins over detection: once you
+click **Use the full site** (or visit `?lite=0`), the key `fallback-forge-mode=full` is
+written to `localStorage` and the detector stops switching in that browser profile — under
+3G you then watch the full app's white screen instead of the fallback. Clear it first
+(F12 → Console):
+
+```js
+localStorage.removeItem('fallback-forge-mode');
+```
+
+Or demo in a fresh Incognito window. Never edit footage to hide this — say it out
+loud: an explicit visitor choice is respected, detection only decides for visitors
+who have not chosen.
+
 1. `pnpm dev`, open `http://localhost:5173/` with the full app visible.
 2. Press **F12** → **Network** tab → throttling dropdown → **Slow 3G**.
 3. Press **Ctrl+R**. Within ~1 s the page replaces itself with `/lite/?ff=effective-type`:
