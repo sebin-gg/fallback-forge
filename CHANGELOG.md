@@ -12,7 +12,7 @@ Record each meaningful project change during the event, newest first. Update thi
   - `packages/fallback-forge/test/detect.test.ts`, `test/render.test.ts`: harness no longer needs storage; the override test now asserts a reload re-detects instead of a remembered value.
   - `README.md`, `docs/demo-script.md`: manual override is per visit; demo needs no `localStorage` reset.
 - Why: a stored `full` choice made the detector stop switching in that profile forever. Under 3G that presented as a white screen stuck on `?lite=0` — the fallback never appeared, exactly for the visitors it exists for.
-- Validation: `vitest run` 29/29; `pnpm demo:generate` (0 localStorage references in generated pages); scripted Chromium with CDP Slow 3G — fresh load switched in 612 ms, "Use the full site" held `/?lite=0` for that visit, a plain reload switched back in 595 ms, and an unthrottled load stayed on the full app; lite registration returned the success message.
+- Validation: `vitest run` 29/29; `pnpm demo:generate` (0 localStorage references in generated pages); scripted Chromium with CDP Slow 3G — fresh load switched in 612 ms, "Use the full site" held `/?lite=0` for that visit, a plain reload switched back in 595 ms, and a load with throttling off stayed on the full app; lite registration returned the success message.
 - Limitations: `?lite=1` is also per visit, so a visitor who wants lite permanently must keep using its URL or the switch link; the tool ships no cookie or profile preference.
 
 ## 2026-10-25T06:58:28+05:30 — Make the DevTools fallback demo unambiguous
