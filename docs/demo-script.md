@@ -6,8 +6,26 @@
 2. Scroll Home: event-details card, schedule preview, recharts restyle. Point out ~4.5 MB full bundle.
 3. Open `/register`: fill form, submit → success status. Show `/schedule` room badges + highlight row.
 4. Run `pnpm demo:verify` (or show report): slow-3g full `/` takes ~91s / 4.5 MB; lite `/` 1.0s / 3 KB.
-5. Show detection: under slow-3g the app switches to `/lite/` automatically (~1s). Manual switch both ways always available.
+5. Show detection: under slow-3g the app switches to `/lite/` automatically (~1s). Manual switch both ways always available (header button + footer link, or `?lite=1` / `?lite=0`).
 6. Show report.md: 14/14 essential actions pass on both versions; zero console errors; zero broken links; 99-100% byte reduction.
+
+## DevTools (F12) demo — the one that lands
+
+1. `pnpm dev`, open `http://localhost:5173/` with the full app visible.
+2. Press **F12** → **Network** tab → throttling dropdown → **Slow 3G**.
+3. Press **Ctrl+R**. Within ~1 s the page replaces itself with `/lite/?ff=effective-type`:
+   same event name, venue, deadline, schedule and registration form, ~3.5 KB of HTML,
+   no bundle. Read the URL bar out loud — the reason is in `?ff=`.
+4. Click **Use the full site** in the yellow banner: back on the full app, and the
+   detector stays quiet (`?lite=0` remembers the choice).
+5. Set throttling back to **No throttling**, reload, show the branded **⚡ Lite mode**
+   button in the header (and the footer link) — the manual switch both ways.
+6. Submit the lite registration form: `Registered! Check your email for confirmation.`
+   The companion route posts to the site's real `/api/register`.
+
+Backup if venue Wi-Fi or throttling misbehaves: `http://localhost:5173/?lite=1` jumps
+straight to the companion route, and `?lite=0` returns. Both work offline of any
+network state.
 
 ## Pitch talking points
 

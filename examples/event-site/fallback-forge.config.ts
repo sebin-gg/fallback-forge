@@ -69,6 +69,9 @@ export default defineConfig({
   ],
   detection: {
     slowLoadMs: 1000,
+    // The site renders its own branded switch links (header + footer), so the
+    // plugin's injected floating pill would only duplicate them.
+    manualSwitchLink: false,
   },
   verify: {
     profiles: [

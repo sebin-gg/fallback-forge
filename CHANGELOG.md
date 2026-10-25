@@ -4,6 +4,15 @@ Record each meaningful project change during the event, newest first. Update thi
 
 ## Event build log
 
+## 2026-10-25T06:58:28+05:30 — Make the DevTools fallback demo unambiguous
+
+- Changed:
+  - `examples/event-site/fallback-forge.config.ts`: set `detection.manualSwitchLink: false` so the plugin stops injecting its floating pill; the sample site already renders its own branded `⚡ Lite mode` header button and footer link, and visitors were seeing three switch links.
+  - `docs/demo-script.md`: added the F12 runbook (Network → Slow 3G → reload → `/lite/?ff=effective-type`, switch back, lite form submit) and the `?lite=1` / `?lite=0` backup.
+- Why: judges see the fallback switch live, driven by the browser's own DevTools throttling, with no simulator or edited footage.
+- Validation: scripted Chromium with CDP network throttling identical to DevTools Slow 3G — auto-switched to `/lite/?ff=effective-type` in 1000 ms; unthrottled load stayed on the full app; manual header switch → lite → "Use the full site" round-tripped; lite registration submitted and returned `Registered! Check your email for confirmation.` Switch links confirmed at 2.
+- Limitations: emulated profiles only; DevTools throttling changes `navigator.connection` values per Chrome build, and the slow-load timer is the backstop when it does not.
+
 ## 2026-10-25T05:10:00+05:30 — Polish event-site demo visuals and finalize submission metadata
 
 - Changed:
