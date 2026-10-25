@@ -8,7 +8,7 @@ Complete this file during the hackathon and use it to prepare your submission th
 - **Track:** BLW — Works Anyway
 - **Short description:** Websites that depend on heavy JavaScript bundles, images and third-party scripts become unusable on weak or unstable connections. Fallback Forge is a developer tool for Vite/React projects that generates a lightweight companion version of a website (semantic HTML, minimal CSS, little or no JavaScript), switches visitors to it when configured network conditions indicate poor connectivity, and uses Playwright to verify that declared essential actions still work in both versions under the same throttled conditions. It helps developers keep critical user journeys — such as finding an event deadline or submitting a registration form — usable when the network fails, and it reports clearly where functionality cannot be preserved.
 - **Code repository URL:** https://github.com/sebin-gg/fallback-forge
-- **Final submitted implementation commit SHA:** 859a7319c18a8526f9fe8188fbf7f6f2eb15ed3e
+- **Final submitted implementation commit SHA:** e8bf2dc1dfc4a578c43c4c8e887ef549ca4e0b6b
 - **Working demo URL or local demo steps:** Local demo via `pnpm dev` (interactive app with `/lite/*` companion route) and automated comparison verify run via `pnpm demo:verify`.
 - **Demo access requirements:** Node.js >= 22 and pnpm >= 9. No external accounts or API keys required; core generation and verification run fully offline.
 
