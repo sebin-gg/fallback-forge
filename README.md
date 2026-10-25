@@ -40,7 +40,7 @@ Fallback Forge reuses supported routes and API endpoints. If it cannot safely pr
 
 A lightweight detection mechanism uses available signals, such as Data Saver preferences, supported network information and configured performance thresholds. When a condition triggers, visitors can be directed to the companion route before loading the full application.
 
-Users can also select lightweight mode manually. Browser support and network signals vary, so automatic detection is best-effort rather than guaranteed.
+Users can also select lightweight mode manually (`?lite=1`, or `?lite=0` to keep the full site for that visit). Detection remembers nothing between page loads, so each visit is judged on the network the visitor actually has. Browser support and network signals vary, so automatic detection is best-effort rather than guaranteed.
 
 **5. Verify**
 

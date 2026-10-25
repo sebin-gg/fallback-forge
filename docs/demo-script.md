@@ -11,27 +11,18 @@
 
 ## DevTools (F12) demo — the one that lands
 
-**Reset before you start.** A remembered manual choice wins over detection: once you
-click **Use the full site** (or visit `?lite=0`), the key `fallback-forge-mode=full` is
-written to `localStorage` and the detector stops switching in that browser profile — under
-3G you then watch the full app's white screen instead of the fallback. Clear it first
-(F12 → Console):
-
-```js
-localStorage.removeItem('fallback-forge-mode');
-```
-
-Or demo in a fresh Incognito window. Never edit footage to hide this — say it out
-loud: an explicit visitor choice is respected, detection only decides for visitors
-who have not chosen.
+**No reset needed.** Detection stores nothing, so every page load re-checks the
+network. `?lite=0` holds the full site for that visit only — reload under 3G and the
+fallback takes over again. Nothing to clear between takes, no Incognito required.
 
 1. `pnpm dev`, open `http://localhost:5173/` with the full app visible.
 2. Press **F12** → **Network** tab → throttling dropdown → **Slow 3G**.
 3. Press **Ctrl+R**. Within ~1 s the page replaces itself with `/lite/?ff=effective-type`:
    same event name, venue, deadline, schedule and registration form, ~3.5 KB of HTML,
    no bundle. Read the URL bar out loud — the reason is in `?ff=`.
-4. Click **Use the full site** in the yellow banner: back on the full app, and the
-   detector stays quiet (`?lite=0` remembers the choice).
+4. Click **Use the full site** in the yellow banner: back on the full app at `?lite=0`,
+   honoured for this visit. Now reload with 3G still on and it switches back to lite —
+   say why: _"nobody gets stuck on the heavy version by accident."_
 5. Set throttling back to **No throttling**, reload, show the branded **⚡ Lite mode**
    button in the header (and the footer link) — the manual switch both ways.
 6. Submit the lite registration form: `Registered! Check your email for confirmation.`

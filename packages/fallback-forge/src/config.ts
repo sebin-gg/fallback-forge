@@ -33,7 +33,6 @@ const DETECTION_DEFAULTS: Required<DetectionConfig> = {
   minRttMs: 400,
   slowLoadMs: 8000,
   queryParam: 'lite',
-  storageKey: 'fallback-forge-mode',
   manualSwitchLink: true,
 };
 

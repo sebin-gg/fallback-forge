@@ -45,7 +45,6 @@ export async function generate(
     companionBase: cfg.companionBase,
     routes,
     actions: cfg.essentialActions,
-    storageKey: cfg.detection.storageKey,
     queryParam: cfg.detection.queryParam,
   };
 

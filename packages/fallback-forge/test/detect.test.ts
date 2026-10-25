@@ -5,7 +5,6 @@ import { testConfig } from './fixtures.js';
 interface FakeEnv {
   pathname: string;
   search?: string;
-  stored?: string | null;
   connection?: Record<string, unknown>;
   fireLoad?: boolean;
 }
@@ -14,8 +13,6 @@ interface FakeEnv {
 function simulate(env: FakeEnv, routes = ['/', '/register']) {
   const cfg = testConfig();
   const script = detectScript(cfg, { routes });
-  const storage = new Map<string, string>();
-  if (env.stored) storage.set(cfg.detection.storageKey, env.stored);
   const timers: Array<() => void> = [];
   const listeners: Record<string, Array<() => void>> = {};
   const state = { replaced: null as string | null };
@@ -27,7 +24,6 @@ function simulate(env: FakeEnv, routes = ['/', '/register']) {
   };
   const fn = new Function(
     'location',
-    'localStorage',
     'navigator',
     'document',
     'window',
@@ -38,10 +34,6 @@ function simulate(env: FakeEnv, routes = ['/', '/register']) {
   );
   fn(
     location,
-    {
-      getItem: (k: string) => storage.get(k) ?? null,
-      setItem: (k: string, v: string) => storage.set(k, v),
-    },
     { connection: env.connection },
     { addEventListener: () => {} },
     { addEventListener: (ev: string, cb: () => void) => (listeners[ev] ??= []).push(cb) },
@@ -51,7 +43,7 @@ function simulate(env: FakeEnv, routes = ['/', '/register']) {
   );
   if (env.fireLoad) listeners.load?.forEach((cb) => cb());
   timers.forEach((cb) => cb());
-  return { redirectedTo: state.replaced, stored: storage.get(cfg.detection.storageKey) };
+  return { redirectedTo: state.replaced };
 }
 
 describe('detectScript', () => {
@@ -62,17 +54,17 @@ describe('detectScript', () => {
     ).toBeNull();
   });
 
-  it('honours manual overrides and remembers them', () => {
-    const forced = simulate({ pathname: '/register', search: '?lite=1' });
-    expect(forced.redirectedTo).toBe('/lite/register/?ff=manual');
-    expect(forced.stored).toBe('lite');
-    const full = simulate({ pathname: '/', search: '?lite=0', connection: { saveData: true } });
-    expect(full.redirectedTo).toBeNull();
-    expect(full.stored).toBe('full');
+  it('honours manual overrides for that page load only', () => {
+    expect(simulate({ pathname: '/register', search: '?lite=1' }).redirectedTo).toBe(
+      '/lite/register/?ff=manual',
+    );
     expect(
-      simulate({ pathname: '/', stored: 'full', connection: { saveData: true } }).redirectedTo,
+      simulate({ pathname: '/', search: '?lite=0', connection: { saveData: true } }).redirectedTo,
     ).toBeNull();
-    expect(simulate({ pathname: '/', stored: 'lite' }).redirectedTo).toBe('/lite/?ff=manual');
+    // No remembered choice: the next load re-evaluates the network and switches.
+    expect(
+      simulate({ pathname: '/', connection: { saveData: true }, fireLoad: true }).redirectedTo,
+    ).toBe('/lite/?ff=save-data');
   });
 
   it('switches on Save-Data, slow effectiveType, low downlink, or high rtt', () => {

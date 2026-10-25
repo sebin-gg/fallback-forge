@@ -10,7 +10,6 @@ function ctx(overrides: Partial<RenderContext> = {}): RenderContext {
     companionBase: cfg.companionBase,
     routes: ['/', '/register'],
     actions: cfg.essentialActions,
-    storageKey: cfg.detection.storageKey,
     queryParam: cfg.detection.queryParam,
     ...overrides,
   };

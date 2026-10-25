@@ -12,3 +12,4 @@ Template: copy `0000-template.md`. Status is `Proposed`, `Accepted`, or
 | [0001](0001-functionality-over-appearance.md) | Companion route: functionality over appearance    | Accepted |
 | [0002](0002-rendered-dom-inspection.md)       | Inspect the rendered DOM, not only the source     | Accepted |
 | [0003](0003-ai-proposes-outline-only.md)      | AI proposes a JSON outline; our code renders HTML | Accepted |
+| [0004](0004-detection-does-not-remember.md)   | Detection does not remember a manual choice       | Accepted |

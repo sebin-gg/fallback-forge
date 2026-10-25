@@ -33,8 +33,6 @@ export interface DetectionConfig {
   slowLoadMs?: number;
   /** Query parameter for manual override: `?lite=1` forces lite, `?lite=0` forces full. Default `lite`. */
   queryParam?: string;
-  /** localStorage key that remembers the manual choice. Default `fallback-forge-mode`. */
-  storageKey?: string;
   /** Inject a small fixed "Lightweight version" link into the full app. Default `true`. */
   manualSwitchLink?: boolean;
 }

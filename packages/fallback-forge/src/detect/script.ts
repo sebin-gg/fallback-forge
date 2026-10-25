@@ -8,16 +8,18 @@ export interface DetectOptions {
 /**
  * Inline script injected at the top of <head>, before the app bundle. Plain
  * ES5, no dependencies, wrapped in try/catch so a missing API can never break
- * the full site. Signals, in order: manual override (`?lite=1|0`, remembered
- * choice), Save-Data, effectiveType, downlink, rtt, and finally a slow-load
- * timer that fires if `window.load` has not happened in time.
+ * the full site. Signals, in order: manual override (`?lite=1` forces the
+ * lightweight version, `?lite=0` forces the full site), Save-Data,
+ * effectiveType, downlink, rtt, and finally a slow-load timer that fires if
+ * `window.load` has not happened in time. Nothing is remembered between page
+ * loads: a stored choice once hid the fallback from visitors whose connection
+ * was still slow, so every document load re-evaluates the current network.
  */
 export function detectScript(cfg: ResolvedConfig, opts: DetectOptions): string {
   const d = cfg.detection;
   const settings = JSON.stringify({
     base: cfg.companionBase,
     param: d.queryParam,
-    key: d.storageKey,
     saveData: d.saveData,
     types: d.effectiveTypes,
     maxDown: d.maxDownlinkMbps,
@@ -29,18 +31,15 @@ export function detectScript(cfg: ResolvedConfig, opts: DetectOptions): string {
     `(function(){try{var c=${settings};` +
     'var p=location.pathname;if(p===c.base||p.indexOf(c.base+"/")===0)return;' +
     'var r=p.replace(/\\/+$/,"")||"/";' +
-    'var q=new URLSearchParams(location.search).get(c.param);var s=null;' +
-    'try{s=localStorage.getItem(c.key)}catch(e){}' +
-    'function remember(v){try{localStorage.setItem(c.key,v)}catch(e){}}' +
+    'var q=new URLSearchParams(location.search).get(c.param);' +
     'function lite(route){return c.base+(route==="/"?"/":route+"/")}' +
-    'function go(reason){remember("lite");location.replace(lite(r)+"?ff="+reason+location.hash)}' +
-    'if(q==="0"){remember("full");return}' +
+    'function go(reason){location.replace(lite(r)+"?ff="+reason+location.hash)}' +
+    'if(q==="0")return;' +
     'document.addEventListener("DOMContentLoaded",function(){var a=document.querySelector("[data-ff-switch]");if(!a)return;' +
-    'a.addEventListener("click",function(ev){ev.preventDefault();var cur=location.pathname.replace(/\\/+$/,"")||"/";remember("lite");' +
+    'a.addEventListener("click",function(ev){ev.preventDefault();var cur=location.pathname.replace(/\\/+$/,"")||"/";' +
     'location.href=c.routes.indexOf(cur)!==-1?lite(cur):c.base+"/"})});' +
     'if(c.routes.indexOf(r)===-1)return;' +
-    'if(q==="1"||s==="lite")return go("manual");' +
-    'if(s==="full")return;' +
+    'if(q==="1")return go("manual");' +
     'var n=navigator.connection||navigator.mozConnection||navigator.webkitConnection;' +
     'if(n){if(c.saveData&&n.saveData)return go("save-data");' +
     'if(n.effectiveType&&c.types.indexOf(n.effectiveType)!==-1)return go("effective-type");' +
