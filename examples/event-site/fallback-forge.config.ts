@@ -68,7 +68,7 @@ export default defineConfig({
     },
   ],
   detection: {
-    slowLoadMs: 2500,
+    slowLoadMs: 1000,
   },
   verify: {
     profiles: [
