@@ -36,7 +36,7 @@
     "playwright"
   ],
   "dependencies": {
-    "@ai-sdk/openai-compatible": "^3.0.87",
+    "@ai-sdk/openai-compatible": "^3.0.92",
     "ai": "^7.0.173",
     "jiti": "^2.7.0",
     "playwright": "^1.65.1",
